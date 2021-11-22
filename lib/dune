@@ -1,2 +1,2 @@
 (library
- (name ray_tut_ocaml))
+ (name lib))

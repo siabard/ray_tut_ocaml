@@ -1,4 +1,4 @@
 (executable
  (public_name ray_tut_ocaml)
  (name main)
- (libraries ray_tut_ocaml))
+ (libraries raylib lib))
