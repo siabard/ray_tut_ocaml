@@ -24,8 +24,17 @@ let rec loop () =
 
     (*draw_rectangle_rec (Rectangle.create 200.0 200.0 100.0 400.0) Color.green; *)
 
-    rotation := (!rotation) +. 0.5;
-    draw_rectangle_pro (Rectangle.create 200.0 200.0 100.0 100.0) (Vector2.create 0.0 0.0) (!rotation) Color.green;
+    rotation := if !rotation >= 360.0 then 0.0 else (!rotation) +. (get_frame_time () *. 60.0);
+    draw_rectangle_pro (Rectangle.create 200.0 200.0 100.0 100.0) (Vector2.create 50.0 50.0) (!rotation) Color.green;
+
+    draw_circle 400 300 64.0 Color.orange;
+
+    draw_triangle (Vector2.create 50.0  0.0) (Vector2.create 100.0 50.0) (Vector2.create 100.0 0.0) Color.blue;
+
+    draw_rectangle_lines 100 100 100 100 Color.black;
+    draw_rectangle_lines_ex (Rectangle.create 100.0 400.0 100.0 100.0) 10 Color.gray;
+
+    draw_poly ( Vector2.create 300.0 300.0 ) 6 20.0 0.0 Color.blue;
     end_drawing ();
     loop ()
 
