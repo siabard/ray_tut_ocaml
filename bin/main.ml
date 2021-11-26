@@ -14,13 +14,14 @@ let setup () =
   let open Raylib in
   init_window window_width window_height "my game";
   let texture = load_texture "./assets/GodotPlayer.png" in
+  let pos = Vector2.create 0.0 0.0 in
   set_target_fps 60;
-  texture
+  (texture, pos)
     
 
 
 (* game loop *)
-let rec loop texture =
+let rec loop texture pos =
   let open Raylib in
 
   match window_should_close () with
@@ -35,6 +36,8 @@ let rec loop texture =
     (*draw_rectangle_rec (Rectangle.create 200.0 200.0 100.0 400.0) Color.green; *)
 
     rotation := if !rotation >= 360.0 then 0.0 else (!rotation) +. (get_frame_time () *. 60.0);
+    let pos = if is_key_down Key.W then Vector2.(create (x pos) ((y pos) -. 0.1)) else pos in
+    let pos = if is_key_down Key.S then Vector2.(create (x pos) ((y pos) +. 0.1)) else pos in
     draw_rectangle_pro (Rectangle.create 200.0 200.0 100.0 100.0) (Vector2.create 50.0 50.0) (!rotation) Color.green;
 
     draw_circle 400 300 64.0 Color.orange;
@@ -49,13 +52,13 @@ let rec loop texture =
     frame := if !timer >= 0.2 then (!frame + 1) mod 2 else !frame;
     timer := if !timer >= 0.2 then 0.0 else (!timer) +. (get_frame_time ());
     
-    draw_texture_rec texture (Rectangle.create (16.0 *. float_of_int !frame) 0.0 16.0 16.0) (Vector2.create 0.0 0.0) Color.white;
+    draw_texture_rec texture (Rectangle.create (16.0 *. float_of_int !frame) 0.0 16.0 16.0) (Vector2.(create (x pos) (y pos))) Color.white;
     
     end_drawing ();
-    loop texture
+    loop texture pos
 
 
 let () =
-  let texture = setup () in
-  loop texture
+  let (texture, pos) = setup () in
+  loop texture pos
 
