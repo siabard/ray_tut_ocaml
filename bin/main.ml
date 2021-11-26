@@ -1,16 +1,26 @@
 
-
 let (window_width, window_height) = (1280, 720)
 
+(* game objects *)
+let rotation = ref 0.0
+
+let frame = ref 0
+
+let timer = ref 0.0
+
+
+(* setup *)
 let setup () =
   let open Raylib in
   init_window window_width window_height "my game";
-  set_target_fps 60
+  let texture = load_texture "./assets/GodotPlayer.png" in
+  set_target_fps 60;
+  texture
+    
 
-let rotation = ref 0.0
 
-
-let rec loop () =
+(* game loop *)
+let rec loop texture =
   let open Raylib in
 
   match window_should_close () with
@@ -35,9 +45,17 @@ let rec loop () =
     draw_rectangle_lines_ex (Rectangle.create 100.0 400.0 100.0 100.0) 10 Color.gray;
 
     draw_poly ( Vector2.create 300.0 300.0 ) 6 20.0 0.0 Color.blue;
+
+    frame := if !timer >= 0.2 then (!frame + 1) mod 2 else !frame;
+    timer := if !timer >= 0.2 then 0.0 else (!timer) +. (get_frame_time ());
+    
+    draw_texture_rec texture (Rectangle.create (16.0 *. float_of_int !frame) 0.0 16.0 16.0) (Vector2.create 0.0 0.0) Color.white;
+    
     end_drawing ();
-    loop ()
+    loop texture
 
 
-let () = setup() |> loop
+let () =
+  let texture = setup () in
+  loop texture
 
